@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>Bash.js</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="src/libs/underscore.js"></script>
+	<script type="text/javascript" src="src/libs/require.js" data-main="src/core"></script>
+	<script type="text/javascript">
+		require.config({
+			urlArgs: "bust=" + (new Date()).getTime()
+		});
+	</script>
+</head>
+<body>
+	<form id="terminal">
+		<input type="text" />
+	</form>
+	<script type="text/javascript">
+		require([ 'core' ], function ( Bash ) {
+
+			Terminal = new Bash();
+
+			Terminal.programs.add({
+
+				name: 'git',
+
+				action: function ( action, from, to ) {
+
+					switch ( action ) {
+						case 'pull':
+						case 'status':
+							this[ action ]();
+							break;
+						default:
+							Terminal.echo( 'git: ' + action + '...' );
+					}
+
+				},
+
+				pull: function ( from, to ) {
+
+					Terminal
+						.echo( 'remote: Counting objects: 40, done.' )
+						.echo( 'remote: Compressing objects: 100% (9/9), done.' )
+						.echo( 'remote: Total 27 (delta 10), reused 27 (delta 10)' )
+						.echo( 'Unpacking objects: 100% (27/27), done.' )
+						.echo( 'From github.com:Tebecom/modera_mobile' )
+						.echo( '692f17..17183d5  master     -> origin/master' );
+				
+				},
+
+				status: function () {
+
+					Terminal
+						.echo( '# On branch master' )
+						.echo( '# Your branch is ahead of \'origin/master\' by 7 commits.' )
+						.echo( '#' )
+						.echo( 'nothing to commit (working directory clean)' );
+
+				},
+
+				help: 'Mini fake of git. Supported methods: pull, status'
+
+			});
+
+			Terminal.programs.add({
+
+				name: 'help',
+
+				action: function ( program ) {
+
+					if ( !program ) {
+
+						Terminal
+							.echo( 'Bashjs by Nazar Kuzmenko' )
+							.echo( 'For help type "help <program_name>"' )
+							.echo( '' )
+							.echo( 'Available programs:' );
+
+						_.each( Terminal.programs.get(), function ( command ) { Terminal.echo( command ); } );
+
+					} else {
+
+						Terminal.echo( Terminal.programs.help( program ) );
+
+					}
+
+				},
+
+				help: 'For help type "help <program_name>"'
+
+			});
+
+			Terminal.programs.add({
+
+				name: 'echo',
+
+				action: function () {
+
+					Terminal.echo( _.values( arguments ).join( ' ' ) );
+
+				}
+
+			});
+
+			$( '#terminal' ).on( 'submit', function () {
+
+				var inp = $( 'input' );
+
+				if ( !inp.val() ) return false;
+
+				Terminal.exec( inp.val() );
+
+				inp.val( '' );
+
+				return false;
+
+			});
+
+		});
+	</script>
+</body>
+</html>
