@@ -1,61 +1,61 @@
 define(function ( require ) {
 
-	var History = (function () {
+    var History = (function () {
 
-		function History () {
+        function History () {
 
-			this.list		= [];
-			this.position	= 0;
-			this.temp		= '';
+            this.list       = [];
+            this.position   = 0;
+            this.temp       = '';
 
-			this.add = function ( commandString ) {
+            this.add = function ( commandString ) {
 
-				this.list.push( commandString );
+                this.list.push( commandString );
 
-				this.position = this.list.length - 1;
+                this.position = this.list.length - 1;
 
-			};
+            };
 
-			this.prev = function () {
+            this.prev = function () {
 
-				this.setCounters();
+                this.setCounters();
 
-				if ( !this.list.length ) { return false; }
+                if ( !this.list.length ) { return false; }
 
-				this.position--;
-				if ( this.position < 0 ) { this.position = 0; }
+                this.position--;
+                if ( this.position < 0 ) { this.position = 0; }
 
-				this.value = this.list[ this.position ] ? this.list[ this.position ] : this.temp;
+                this.value = this.list[ this.position ] ? this.list[ this.position ] : this.temp;
 
-			};
+            };
 
-			this.next = function () {
+            this.next = function () {
 
-				this.setCounters();
+                this.setCounters();
 
-				if ( !this.list.length ) { return false; }
+                if ( !this.list.length ) { return false; }
 
-				this.position++;
-				if ( this.position > this.list.length) { this.position = this.list.length; }
+                this.position++;
+                if ( this.position > this.list.length) { this.position = this.list.length; }
 
-			};
+            };
 
-		}
+        }
 
-		History.prototype.setCounters = function () {
+        History.prototype.setCounters = function () {
 
-			if ( this.list[ this.position ] ) {
-				this.list[ this.position ] = this.value;
-			} else {
-				this.temp = this.value;
-			}
+            if ( this.list[ this.position ] ) {
+                this.list[ this.position ] = this.value;
+            } else {
+                this.temp = this.value;
+            }
 
-		}
+        }
 
-		return History;
+        return History;
 
-	})();
+    })();
 
-	return History;
+    return History;
 
 });
